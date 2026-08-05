@@ -627,6 +627,9 @@ class BedrockGuardrail(CustomGuardrail, BaseAWSLLM):
             aws_region_name=aws_region_name,
         )
 
+        if get_secret_str("AWS_BEARER_TOKEN_BEDROCK"):
+            return None, aws_region_name
+
         credentials: Final[Credentials] = self.get_credentials(
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,

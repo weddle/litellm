@@ -1,0 +1,32 @@
+model_list:
+  - model_name: claude-sonnet-5
+    litellm_params:
+      model: bedrock/us.anthropic.claude-sonnet-5
+      aws_region_name: us-east-1
+
+general_settings:
+  master_key: sk-1234
+
+guardrails:
+  - guardrail_name: aws-prompt-attack-scanner
+    litellm_params:
+      guardrail: bedrock
+      mode: pre_call
+      default_on: true
+      guardrailIdentifier: 1pkg9iw5lbhl
+      guardrailVersion: DRAFT
+      aws_region_name: us-east-1
+
+  - guardrail_name: block-dangerous-downloads
+    litellm_params:
+      guardrail: tool_permission
+      mode: post_call
+      default_on: true
+      default_action: allow
+      on_disallowed_action: block
+      rules:
+        - id: block-untrusted-downloads
+          tool_name: "(?i)bash"
+          decision: deny
+          allowed_param_patterns:
+            command: '(?s).*\b(curl|wget)\b.*\bevil\.com\b.*'
