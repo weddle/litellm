@@ -101,6 +101,7 @@ export interface AutoRouterDeployment extends AutoRouterCandidateDeployment {
     id?: string | null;
     /** False for config.yaml-defined deployments, which the update and delete routes refuse. */
     db_model?: boolean | null;
+    base_model?: string | null;
     created_at?: string | null;
     updated_at?: string | null;
     team_id?: string | null;
@@ -122,7 +123,7 @@ export const selectAutoRouterModelGroups = (deployments: AutoRouterCandidateDepl
 export const selectAutoRouterDeployments = (deployments: AutoRouterDeployment[]): AutoRouterDeployment[] =>
   deployments.filter(isAutoRouterDeployment);
 
-const fetchAllModelDeployments = async (
+export const fetchAllModelDeployments = async (
   accessToken: string,
   userId: string,
   userRole: string,
