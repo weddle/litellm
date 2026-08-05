@@ -4,6 +4,11 @@ model_list:
       model: bedrock/us.anthropic.claude-sonnet-5
       aws_region_name: us-east-1
 
+  - model_name: claude-haiku-4-5
+    litellm_params:
+      model: bedrock/us.anthropic.claude-haiku-4-5-20251001-v1:0
+      aws_region_name: us-east-1
+
 general_settings:
   master_key: sk-1234
 
@@ -16,8 +21,9 @@ guardrails:
       guardrailIdentifier: 1pkg9iw5lbhl
       guardrailVersion: DRAFT
       aws_region_name: us-east-1
+      scan_only_tool_results: true
 
-  - guardrail_name: block-dangerous-downloads
+  - guardrail_name: download-allowlist
     litellm_params:
       guardrail: tool_permission
       mode: post_call
@@ -25,8 +31,8 @@ guardrails:
       default_action: allow
       on_disallowed_action: block
       rules:
-        - id: block-untrusted-downloads
+        - id: deny-downloads-outside-allowlist
           tool_name: "(?i)bash"
           decision: deny
           allowed_param_patterns:
-            command: '(?s).*\b(curl|wget)\b.*\bevil\.com\b.*'
+            command: '(?s)(?!.*(?:docs\.litellm\.ai|pypi\.org))(?=.*\b(?:curl|wget)\b).*'
